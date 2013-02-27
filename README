@@ -1,0 +1,20 @@
+                                DEFREC
+                                ------
+
+                           By Robert Smith
+
+
+DEFREC is a library for defining "top-level" mutually recursive
+functions.
+
+Example:
+
+(defrec
+  (even (x)
+    (declare (type unsigned-byte x))
+    (if (zerop x) t (odd (1- x))))
+  (odd (x) 
+    (declare (type unsigned-byte x))
+    (if (zerop x) nil (even (1- x)))))
+
+Now we can call EVEN and ODD.
