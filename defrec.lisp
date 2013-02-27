@@ -11,6 +11,15 @@
 
   (<function name> <lambda list>
     <function body>)."
+  (assert (every (lambda (defn)
+                   (and (listp defn)
+                        (<= 2 (length defn))
+                        (symbolp (first defn))
+                        (listp (second defn))))
+                 definitions)
+          ()
+          "Every DEFREC definition must have the form ~
+           (symbol lambda-list body...).")
   (let* ((f-names (mapcar #'first definitions))
          (decls   (mapcar (lambda (defn)
                             (nth-value
