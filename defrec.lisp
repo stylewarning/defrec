@@ -12,7 +12,10 @@
   should be of the same form of FLET or LABELS:
 
   (<function name> <lambda list>
-    <function body>)."
+    <function body>).
+
+Currently, lambda lists can only be lists of symbols. &REST,
+&OPTIONAL, and &KEY arguments are not supported."
   (assert (every (lambda (defn)
                    (and (listp defn)
                         (<= 2 (length defn))
