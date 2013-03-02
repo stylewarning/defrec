@@ -7,6 +7,11 @@
 
 ;;;; FIXME: Doesn't handle &foo arguments.
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun &-symbol (symbol)
+    (let ((posn (position #\& (symbol-name symbol))))
+      (and posn (zerop posn)))))
+
 (defmacro defrec (&body definitions)
   "Define mutually recursive functions. Each definition of DEFINITIONS
   should be of the same form of FLET or LABELS:
@@ -20,11 +25,14 @@ Currently, lambda lists can only be lists of symbols. &REST,
                    (and (listp defn)
                         (<= 2 (length defn))
                         (symbolp (first defn))
-                        (listp (second defn))))
+                        (listp (second defn))
+                        (every #'symbolp (second defn))
+                        (notany #'&-symbol (second defn))))
                  definitions)
           ()
           "Every DEFREC definition must have the form ~
-           (symbol lambda-list body...).")
+           (symbol lambda-list body...) where the lambda list is a list of ~
+           non-& symbols.")
   (when (null definitions)
     (return-from defrec nil))
   (cond
